@@ -1,0 +1,41 @@
+# Install the KRLS package (run this line only once)
+install.packages('KRLS')
+
+# Load the KRLS package
+library(KRLS)
+
+# Load the data from "am_lg.txt" into a data frame
+data_am_lg <- as.data.frame(read.table("am_lg.txt"))
+
+# Assign names to the columns of the data frame
+names(data_am_lg) <- c("s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", 
+                       "s9", "s10", "s11", "s12", "s13", "s14", "s15", 
+                       "s16", "s17", "am")
+
+# Separate the data frame into input features (x) and the target variable (y)
+x <- data_am_lg[, -18]  # All columns except the 18th column (input features)
+y <- data_am_lg[, 18]   # The 18th column (target variable)
+
+# Perform Kernel Regularized Least Squares (KRLS) regression
+krlsout_am <- krls(x, y)
+
+# Perform KRLS regression with specific lambda and sigma values
+krlsout_am_opt <- krls(x, y, lambda = 0.1, sigma = 121)
+
+# Extract the fitted values from the initial KRLS model
+krlsout_am$fit
+
+# Extract the fitted values from the optimized KRLS model
+krlsout_am_opt$fit
+
+# Assign the initial KRLS model to a variable z
+z <- krlsout_am
+
+# Use the model to make predictions on the input features
+predout_am <- predict(z, x, se.fit = TRUE)
+
+# Extract the predicted values
+predout_am$fit
+
+# Extract the fitted values from the initial KRLS model (redundant, already done above)
+krlsout_am$fit
